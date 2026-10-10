@@ -3,132 +3,148 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Adivina en la Frente - Heads Up Mega</title>
+  <title>Adivina en la Frente - Heads Up Game</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --bg-dark: #070b19;
+      --card-dark: #0f172a;
+      --card-border: #1e293b;
+    }
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       touch-action: manipulation;
       user-select: none;
       -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
-      overflow-x: hidden;
+      background-color: var(--bg-dark);
     }
     .font-game {
       font-family: 'Fredoka', cursive, sans-serif;
     }
-    @keyframes popIn {
-      0% { transform: scale(0.7); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
+    .app-screen {
+      transition: opacity 0.2s ease, transform 0.2s ease;
     }
-    .animate-pop {
-      animation: popIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    .app-screen.hidden {
+      display: none !important;
     }
     ::-webkit-scrollbar {
       width: 5px;
-      height: 5px;
     }
     ::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, 0.6);
+      background: rgba(15, 23, 42, 0.4);
     }
     ::-webkit-scrollbar-thumb {
-      background: rgba(99, 102, 241, 0.5);
+      background: #334155;
       border-radius: 9999px;
+    }
+    @keyframes popBounce {
+      0% { transform: scale(0.65); opacity: 0; }
+      60% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-pop {
+      animation: popBounce 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
   </style>
 </head>
-<body class="bg-slate-950 text-white min-h-screen flex flex-col justify-center items-center select-none overflow-hidden">
+<body class="text-white min-h-screen flex flex-col items-center justify-center overflow-x-hidden selection:bg-indigo-500">
 
-  <!-- ========================================== -->
-  <!-- 1. PANTALLA PRINCIPAL / MENÚ               -->
-  <!-- ========================================== -->
-  <div id="screen-home" class="w-full h-full min-h-screen flex flex-col p-3 md:p-5 max-w-5xl mx-auto justify-between overflow-y-auto">
-    <!-- Header -->
+  <!-- ==========================================
+       1. PANTALLA PRINCIPAL / MENÚ DE CATEGORÍAS
+       ========================================== -->
+  <div id="screen-home" class="app-screen w-full min-h-screen max-w-4xl mx-auto flex flex-col justify-between p-3.5 md:p-6 overflow-y-auto">
+    
+    <!-- Encabezado con banner neón -->
     <header class="text-center mt-1 mb-2">
-      <div class="inline-flex items-center gap-1.5 bg-indigo-950/80 border border-indigo-500/40 px-3 py-1 rounded-full text-indigo-300 text-xs font-semibold uppercase tracking-wider mb-1.5">
-        <span>✨ Edición Mega Pack (+1,400 Palabras) • 100% Sin Anuncios</span>
+      <div class="inline-flex items-center gap-1.5 bg-indigo-950/80 border border-indigo-500/40 px-4 py-1 rounded-full text-indigo-300 text-[11px] md:text-xs font-bold uppercase tracking-wider mb-2 shadow-sm">
+        <span>✨ EDICIÓN MEGA PACK (+1,400 PALABRAS) • 100% SIN ANUNCIOS</span>
       </div>
-      <h1 class="text-3xl md:text-5xl font-game font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-pink-400 to-indigo-400">
+      <h1 class="text-4xl md:text-6xl font-game font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-rose-300 to-indigo-300">
         ¡En la Frente!
       </h1>
-      <p class="text-xs md:text-sm text-slate-400 mt-0.5 max-w-lg mx-auto">
+      <p class="text-xs md:text-sm text-slate-400 mt-1 max-w-xl mx-auto leading-relaxed">
         Gira tu celular en horizontal, ponlo en tu frente y adivina tantas palabras como puedas antes de que se acabe el tiempo.
       </p>
     </header>
 
-    <!-- Indicador de Inclinación -->
-    <section class="bg-slate-900/90 border border-slate-800 rounded-2xl p-2.5 md:p-3 my-1.5 shadow-xl">
-      <div class="grid grid-cols-2 gap-2 text-center text-xs md:text-sm">
-        <div class="flex items-center justify-center gap-2 p-2 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-emerald-300">
-          <span class="text-xl">⬆️</span>
-          <div class="text-left leading-tight">
-            <span class="font-bold block">Inclina al Techo</span>
-            <span class="text-[10px] text-emerald-400/80">¡Acierto (+1 pt)!</span>
-          </div>
+    <!-- Indicadores de Inclinación al Techo / Piso -->
+    <section class="grid grid-cols-2 gap-2.5 my-2">
+      <div class="flex items-center justify-center gap-3 p-2.5 md:p-3 rounded-2xl bg-emerald-950/30 border border-emerald-500/40 text-emerald-300 shadow-lg">
+        <span class="bg-emerald-500/20 text-emerald-300 px-2 py-1 rounded-xl text-base font-bold">⬆️</span>
+        <div class="text-left leading-tight">
+          <span class="font-bold text-xs md:text-sm block text-emerald-200">Inclina al Techo</span>
+          <span class="text-[11px] text-emerald-400/90 font-medium">¡Acierto (+1 pt)!</span>
         </div>
-        <div class="flex items-center justify-center gap-2 p-2 rounded-xl bg-amber-950/40 border border-amber-500/30 text-amber-300">
-          <span class="text-xl">⬇️</span>
-          <div class="text-left leading-tight">
-            <span class="font-bold block">Inclina al Piso</span>
-            <span class="text-[10px] text-amber-400/80">Paso / Siguiente</span>
-          </div>
+      </div>
+      <div class="flex items-center justify-center gap-3 p-2.5 md:p-3 rounded-2xl bg-amber-950/30 border border-amber-500/40 text-amber-300 shadow-lg">
+        <span class="bg-amber-500/20 text-amber-300 px-2 py-1 rounded-xl text-base font-bold">⬇️</span>
+        <div class="text-left leading-tight">
+          <span class="font-bold text-xs md:text-sm block text-amber-200">Inclina al Piso</span>
+          <span class="text-[11px] text-amber-400/90 font-medium">Paso / Siguiente</span>
         </div>
       </div>
     </section>
 
-    <!-- Panel de Categorías -->
+    <!-- Barra de Selección y Buscador -->
     <section class="my-1.5 flex-1 flex flex-col min-h-0">
       <div class="flex items-center justify-between mb-2 gap-2 flex-wrap">
         <div class="flex items-center gap-2">
-          <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Categoría Seleccionada:</label>
-          <span id="selected-badge" class="text-xs bg-indigo-600 text-white font-bold px-2.5 py-0.5 rounded-full shadow">🥀 José Madero</span>
+          <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400">CATEGORÍA SELECCIONADA:</label>
+          <span id="selected-badge" class="text-xs bg-indigo-600 text-white font-bold px-3 py-1 rounded-full shadow-md flex items-center gap-1.5">
+            💼 Profesiones & Oficios
+          </span>
         </div>
-        <input 
-          id="category-search" 
-          type="text" 
-          placeholder="🔍 Buscar categoría..." 
-          class="bg-slate-900 border border-slate-700 text-xs px-3 py-1.5 rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 w-44"
-        />
+        <div class="relative w-full sm:w-auto">
+          <input 
+            id="category-search" 
+            type="text" 
+            placeholder="🔍 Buscar categoría..." 
+            class="w-full sm:w-52 bg-slate-900 border border-slate-700 text-xs px-3.5 py-1.5 rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 shadow-inner"
+          />
+        </div>
       </div>
-      <div id="categories-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 max-h-[35vh] md:max-h-[40vh] overflow-y-auto pr-1">
-        <!-- Generado dinámicamente con JavaScript -->
+
+      <!-- Cuadrícula con las categorías en 2 columnas -->
+      <div id="categories-container" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 max-h-[38vh] md:max-h-[44vh] overflow-y-auto pr-1">
+        <!-- Renderizado dinámico -->
       </div>
     </section>
 
-    <!-- Opciones de tiempo y botón de acción -->
-    <footer class="mt-2 space-y-2.5">
-      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-2.5 flex items-center justify-between">
-        <span class="text-xs md:text-sm font-semibold text-slate-300 flex items-center gap-1">
+    <!-- Footer con Selector de Tiempo y Botón Principal -->
+    <footer class="mt-2.5 space-y-2.5">
+      <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-2.5 flex items-center justify-between shadow-md">
+        <span class="text-xs md:text-sm font-semibold text-slate-300 flex items-center gap-1.5">
           ⏱️ Tiempo de Ronda:
         </span>
-        <div class="flex gap-1.5" id="time-selector">
-          <button data-time="60" class="time-btn px-3 py-1 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white shadow-md">60s</button>
-          <button data-time="90" class="time-btn px-3 py-1 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">90s</button>
-          <button data-time="120" class="time-btn px-3 py-1 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">120s</button>
+        <div class="flex gap-2" id="time-selector">
+          <button data-time="60" class="time-btn px-4 py-1.5 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white shadow-md">60s</button>
+          <button data-time="90" class="time-btn px-4 py-1.5 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">90s</button>
+          <button data-time="120" class="time-btn px-4 py-1.5 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700">120s</button>
         </div>
       </div>
 
-      <button id="btn-start" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 hover:brightness-110 active:scale-[0.99] transition-all rounded-2xl font-game font-bold text-xl md:text-2xl text-white shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+      <button id="btn-start" class="w-full py-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-indigo-600 hover:brightness-110 active:scale-[0.99] transition-all rounded-2xl font-game font-bold text-xl md:text-2xl text-white shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-2">
         <span>¡JUGAR AHORA!</span>
         <span class="text-2xl">🎉</span>
       </button>
     </footer>
   </div>
 
-  <!-- ========================================== -->
-  <!-- 2. CUENTA REGRESIVA 3, 2, 1                -->
-  <!-- ========================================== -->
-  <div id="screen-countdown" class="hidden fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center p-6 text-center">
+  <!-- ==========================================
+       2. PANTALLA DE CUENTA REGRESIVA (3, 2, 1)
+       ========================================== -->
+  <div id="screen-countdown" class="app-screen hidden fixed inset-0 z-50 bg-[#070b19] flex flex-col items-center justify-center p-6 text-center">
     <div class="max-w-md w-full flex flex-col items-center">
       <div class="text-6xl mb-3 animate-bounce">📱</div>
       <h2 class="text-2xl md:text-4xl font-game font-bold text-amber-400 mb-1">¡Coloca el cel en tu frente!</h2>
-      <p class="text-slate-300 text-sm md:text-base mb-6">Pantalla mirando a tus amigos o familia</p>
+      <p class="text-slate-300 text-sm md:text-base mb-6">Pantalla en horizontal mirando hacia los demás</p>
       
-      <div id="countdown-number" class="text-8xl md:text-9xl font-game font-black text-white scale-100 transition-all duration-300 drop-shadow-[0_10px_35px_rgba(99,102,241,0.7)]">
+      <div id="countdown-number" class="text-8xl md:text-9xl font-game font-black text-white transition-all duration-300 drop-shadow-[0_10px_35px_rgba(99,102,241,0.7)]">
         3
       </div>
       <div class="mt-6 text-xs text-slate-400 bg-slate-900 border border-slate-800 px-4 py-2 rounded-full">
@@ -137,12 +153,12 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- 3. PANTALLA DE JUEGO (GAMEPLAY)            -->
-  <!-- ========================================== -->
-  <div id="screen-game" class="hidden fixed inset-0 z-40 bg-slate-950 flex flex-col justify-between p-4 md:p-6 transition-colors duration-200">
-    <!-- Barra superior -->
-    <div class="flex items-center justify-between w-full max-w-6xl mx-auto z-10 pointer-events-none">
+  <!-- ==========================================
+       3. PANTALLA DE JUEGO (GAMEPLAY)
+       ========================================== -->
+  <div id="screen-game" class="app-screen hidden fixed inset-0 z-40 bg-slate-950 flex flex-col justify-between p-4 md:p-6 transition-colors duration-200">
+    <!-- Barra superior durante juego -->
+    <div class="flex items-center justify-between w-full max-w-6xl mx-auto z-20 pointer-events-none">
       <div class="flex items-center gap-2">
         <span id="game-category-label" class="bg-black/50 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-xs md:text-sm font-semibold text-slate-200">
           Categoría
@@ -157,19 +173,19 @@
           60
         </div>
         <button id="btn-force-end" class="pointer-events-auto bg-black/40 hover:bg-rose-900/60 border border-white/20 px-3 py-1 rounded-xl text-xs text-slate-300 hover:text-white transition">
-          ✕ Terminar
+          ✕ Salir
         </button>
       </div>
     </div>
 
-    <!-- Barra de progreso -->
-    <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden my-1 max-w-6xl mx-auto z-10 pointer-events-none">
+    <!-- Barra de tiempo fluido -->
+    <div class="w-full bg-white/10 h-2 rounded-full overflow-hidden my-1 max-w-6xl mx-auto z-20 pointer-events-none">
       <div id="game-time-progress" class="bg-gradient-to-r from-amber-400 to-rose-500 h-full w-full transition-all duration-300"></div>
     </div>
 
-    <!-- Palabra central -->
-    <div class="flex-1 flex flex-col items-center justify-center text-center my-auto px-4 z-10 pointer-events-none">
-      <div id="word-display" class="font-game font-bold text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-wide text-white drop-shadow-[0_4px_20px_rgba(0,0,0,0.85)] leading-tight max-w-5xl">
+    <!-- Palabra central y feedback -->
+    <div class="flex-1 flex flex-col items-center justify-center text-center my-auto px-4 z-20 pointer-events-none">
+      <div id="word-display" class="font-game font-bold text-4xl sm:text-6xl md:text-7xl lg:text-8xl tracking-wide text-white drop-shadow-[0_4px_25px_rgba(0,0,0,0.9)] leading-tight max-w-5xl">
         PALABRA
       </div>
       <div id="feedback-label" class="hidden font-game text-5xl md:text-7xl font-black mt-2 tracking-wider">
@@ -180,23 +196,23 @@
       </div>
     </div>
 
-    <!-- Toques de auxilio táctil en pantalla -->
-    <div class="absolute inset-0 flex flex-col z-0 opacity-15 pointer-events-auto">
-      <div id="touch-correct" class="flex-1 border-b border-dashed border-emerald-400/40 flex items-start justify-center pt-8 active:bg-emerald-500/30 cursor-pointer">
-        <span class="text-xs tracking-widest uppercase font-bold text-emerald-300">Toca arriba para Acierto (✓)</span>
+    <!-- Controles táctiles de auxilio (izq = Paso, der = Correcto) -->
+    <div class="absolute inset-0 flex z-10 opacity-10 pointer-events-auto">
+      <div id="touch-pass" class="flex-1 bg-amber-500 flex items-center justify-start pl-6 active:opacity-40 cursor-pointer" title="Toca lado izquierdo para pasar">
+        <span class="text-xs uppercase font-extrabold tracking-widest text-white rotate-90">↷ PASAR</span>
       </div>
-      <div id="touch-pass" class="flex-1 flex items-end justify-center pb-8 active:bg-amber-500/30 cursor-pointer">
-        <span class="text-xs tracking-widest uppercase font-bold text-amber-300">Toca abajo para Pasar (↷)</span>
+      <div id="touch-correct" class="flex-1 bg-emerald-500 flex items-center justify-end pr-6 active:opacity-40 cursor-pointer" title="Toca lado derecho para acertar">
+        <span class="text-xs uppercase font-extrabold tracking-widest text-white -rotate-90">✓ ACIERTO</span>
       </div>
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- 4. PANTALLA DE RESULTADOS                  -->
-  <!-- ========================================== -->
-  <div id="screen-results" class="hidden fixed inset-0 z-50 bg-slate-950 flex flex-col p-4 md:p-6 max-w-4xl mx-auto overflow-y-auto">
+  <!-- ==========================================
+       4. PANTALLA DE RESULTADOS
+       ========================================== -->
+  <div id="screen-results" class="app-screen hidden fixed inset-0 z-50 bg-[#070b19] flex flex-col p-4 md:p-6 max-w-4xl mx-auto overflow-y-auto">
     <div class="text-center my-2">
-      <span class="text-4xl md:text-5xl animate-bounce inline-block mb-1">🏆</span>
+      <span class="text-5xl animate-bounce inline-block mb-1">🏆</span>
       <h2 class="text-3xl md:text-4xl font-game font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-pink-400 to-indigo-400">
         ¡Ronda Finalizada!
       </h2>
@@ -207,17 +223,16 @@
       </div>
     </div>
 
-    <!-- Historial de respuestas -->
+    <!-- Lista de desglose -->
     <div class="flex-1 my-2 bg-slate-900/90 border border-slate-800 rounded-2xl p-3 md:p-4 overflow-y-auto max-h-[46vh]">
       <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center justify-between">
         <span>Desglose de palabras</span>
         <span id="results-count" class="text-slate-400 text-xs">Total: 0</span>
       </h3>
-      <div id="results-list" class="space-y-1.5">
-        <!-- Render dinámico -->
-      </div>
+      <div id="results-list" class="space-y-1.5"></div>
     </div>
 
+    <!-- Botones de reinicio o volver al menú -->
     <div class="grid grid-cols-2 gap-3 mt-2">
       <button id="btn-replay" class="py-3.5 px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-98 rounded-xl font-game font-bold text-base md:text-lg text-white shadow-lg transition flex items-center justify-center gap-2">
         <span>🔄 Jugar Otra Vez</span>
@@ -230,9 +245,59 @@
 
   <script>
     /**
-     * BANCO DE DATOS MAESTRO (13 CATEGORÍAS - TODAS CON MÁS DE 100 ELEMENTOS)
+     * BANCO DE DATOS MAESTRO (12 CATEGORÍAS COMPLETAS CON +100 ELEMENTOS CADA UNA)
      */
     const GAME_DATA = {
+      "💼 Profesiones & Oficios": {
+        icon: "👨‍💼",
+        words: [
+          "Médico (Doctor)", "Enfermero", "Dentista", "Veterinario", "Farmacéutico",
+          "Psicólogo", "Nutriólogo", "Fisioterapeuta", "Paramédico", "Cirujano",
+          "Óptico", "Peluquero (Estilista)", "Barbero", "Maquillista", "Masajista",
+          "Policía", "Bombero", "Militar (Soldado)", "Detective", "Guardia de seguridad",
+          "Salvavidas", "Juez", "Abogado", "Cartero", "Recolector de basura",
+          "Barrendero", "Maestro (Profesor)", "Director escolar", "Científico", "Biólogo",
+          "Químico", "Físico", "Astrónomo", "Arqueólogo", "Historiador",
+          "Bibliotecario", "Ingeniero", "Arquitecto", "Albañil", "Carpintero",
+          "Fontanero (Plomero)", "Electricista", "Mecánico", "Pintor de casas", "Cerrajero",
+          "Soldador", "Herrero", "Jardinero", "Sastre (Costurera)", "Zapatero",
+          "Chef (Cocinero)", "Mesero", "Panadero", "Pastelero (Repostero)", "Carnicero",
+          "Pescadero", "Bartender (Barman)", "Barista", "Recepcionista", "Camarero de hotel",
+          "Contador", "Administrador", "Secretario", "Cajero", "Vendedor",
+          "Agente de bienes raíces", "Banquero", "Oficinista", "Agente de viajes", "Piloto aviador",
+          "Azafata (Sobrecargo)", "Conductor de autobús", "Taxista", "Camionero", "Capitán de barco",
+          "Marinero", "Repartidor", "Maquinista de tren", "Actor", "Actriz",
+          "Cantante", "Músico", "Bailarín", "Pintor artístico", "Escultor",
+          "Fotógrafo", "Escritor", "Periodista (Reportero)", "Locutor de radio", "Director de cine",
+          "Diseñador gráfico", "Mago", "Payaso", "Futbolista", "Entrenador deportivo",
+          "Árbitro", "Boxeador", "Atleta", "Granjero (Agricultor)", "Pescador"
+        ]
+      },
+      "🦁 Reino Animal & Bichos": {
+        icon: "🦁",
+        words: [
+          // Domésticos y Granja
+          "Perro", "Gato", "Caballo", "Vaca", "Cerdo", "Oveja", "Cabra", "Burro", "Gallina", "Gallo",
+          "Pato", "Pavo", "Conejo", "Hámster", "Toro", "Pollito",
+          // Mamíferos Terrestres y Salvajes
+          "León", "Tigre", "Elefante", "Jirafa", "Cebra", "Oso", "Oso polar", "Oso panda", "Lobo", "Zorro",
+          "Mono", "Gorila", "Chimpancé", "Canguro", "Koala", "Leopardo", "Guepardo", "Hipopótamo", "Rinoceronte",
+          "Ciervo (Venado)", "Camello", "Hiena", "Ardilla", "Erizo", "Mapache", "Murciélago", "Rata", "Ratón",
+          // Aves
+          "Águila", "Halcón", "Búho", "Lechuza", "Loro", "Guacamaya", "Pingüino", "Flamenco", "Avestruz", "Tucán",
+          "Paloma", "Cuervo", "Colibrí", "Cisne", "Pelícano", "Gaviota",
+          // Vida Marina
+          "Delfín", "Ballena", "Tiburón", "Orca", "Foca", "León marino", "Morsa", "Pulpo", "Calamar", "Medusa",
+          "Cangrejo", "Langosta", "Camarón", "Estrella de mar", "Caballito de mar", "Tortuga marina", "Pez payaso",
+          "Pez dorado", "Raya (Marraya)",
+          // Reptiles y Anfibios
+          "Cocodrilo", "Caimán", "Serpiente", "Víbora", "Tortuga terrestre", "Camaleón", "Iguana", "Lagarto",
+          "Rana", "Sapo", "Salamandra",
+          // Insectos y Arácnidos
+          "Mariposa", "Abeja", "Avispa", "Hormiga", "Mosca", "Mosquito", "Mariquita (Catarina)", "Grillo",
+          "Saltamontes", "Araña", "Tarántula", "Escorpión", "Ciempiés", "Escarabajo", "Luciérnaga", "Mantis religiosa"
+        ]
+      },
       "🥀 José Madero": {
         icon: "🎸",
         words: [
@@ -262,359 +327,48 @@
           "Vidrio por Doquier", "Violencia", "Willkommen", "¿Y Ahora Qué?", "Zero"
         ]
       },
-      "🌍 Países del Mundo": {
-        icon: "🌐",
+      "⚽ Equipos de Fútbol": {
+        icon: "⚽",
         words: [
-          "México", "Argentina", "Brasil", "Colombia", "Chile", "Perú", "Canadá", "Estados Unidos",
-          "Uruguay", "Ecuador", "Bolivia", "Paraguay", "Venezuela", "Costa Rica", "Panamá", "Guatemala",
-          "Honduras", "El Salvador", "Nicaragua", "Cuba", "República Dominicana", "Jamaica", "Haití",
-          "España", "Francia", "Italia", "Alemania", "Reino Unido", "Portugal", "Irlanda", "Bélgica",
-          "Países Bajos", "Suiza", "Austria", "Grecia", "Suecia", "Noruega", "Dinamarca", "Finlandia",
-          "Polonia", "República Checa", "Hungría", "Rumania", "Croacia", "Serbia", "Ucrania", "Rusia",
-          "Turquía", "Japón", "China", "Corea del Sur", "Corea del Norte", "India", "Tailandia",
-          "Vietnam", "Filipinas", "Indonesia", "Malasia", "Singapur", "Arabia Saudita", "Emiratos Árabes Unidos",
-          "Qatar", "Israel", "Líbano", "Jordania", "Irak", "Irán", "Pakistán", "Bangladés", "Nepal",
-          "Egipto", "Marruecos", "Sudáfrica", "Nigeria", "Kenia", "Etiopía", "Ghana", "Senegal",
-          "Costa de Marfil", "Túnez", "Argelia", "Madagascar", "Tanzania", "Uganda", "Camerún", "Zimbabue",
-          "Australia", "Nueva Zelanda", "Fiyi", "Samoa", "Papúa Nueva Guinea", "Mónaco", "Islandia",
-          "Luxemburgo", "Malta", "Chipre", "Mongolia", "Kazajistán", "Georgia", "Armenia",
-          "Bulgaria", "Eslovaquia", "Eslovenia", "Estonia", "Letonia", "Lituania", "Marruecos"
-        ]
-      },
-      "🇲🇽 Mexicanadas & Cultura Mexicana": {
-        icon: "🌶️",
-        words: [
-          "El Chavo del 8", "Tacos al Pastor", "Lucha Libre", "El Santo Enmascarado", "La Llorona",
-          "Quinceañera bailando el vals", "Vicente Fernández", "Día de Muertos", "El Chupacabras",
-          "Piñata de 7 picos", "La Chancla voladora", "Mariachis en Garibaldi", "Molcajete de piedra",
-          "El Chavo metido en su barril", "Gorditas de chicharrón prensado", "Pozole rojo con rábano",
-          "Trajinera en Xochimilco", "Cantinflas", "Frida Kahlo", "Cantar 'Cielito Lindo'",
-          "Tomar tequila con limón y sal", "Tortas ahogadas de Jalisco", "Trompo de pastor girando",
-          "Chapulines con sal y limón", "Pan de muerto con chocolate caliente", "Bailar 'La Chona'",
-          "Esquites con tuétano y queso", "El Chapulín Colorado", "Barrio de Tepito", "Elote con chile del que pica",
-          "Michelada bien fría con gomitas", "Dar el Grito de Independencia", "Taquería de la esquina",
-          "Bailar el Payaso de Rodeo", "El Santo contra las Momias", "Tamales oaxaqueños", "Tlacoyos de frijol",
-          "Chiles en nogada", "Mole poblano con arroz", "Mercado de Sonora", "Lotería mexicana",
-          "La Catrina de Posada", "Blue Demon", "Los Huicholes", "Pirámides de Teotihuacán",
-          "Basílica de Guadalupe", "Cempasúchil en noviembre", "Pueblo Mágico", "Cantar con banda sinaloense",
-          "Caballito de mezcal con sal de gusano", "Tacos de suadero con cilantro", "Agua fresca de horchata",
-          "Agua fresca de jamaica", "Pambazo de papa con chorizo", "Tostadas de pata", "Chicharrón preparado con cueritos",
-          "Gansito congelado", "Mazapán de la Rosa que se rompe", "Pelón Pelo Rico", "Paleta Vero Mango con chile",
-          "Borrachitos dulces", "Cajeta de Celaya", "Charanda michoacana", "Pulque curado de avena",
-          "Tepache fermentado en barril", "Torta de tamal (Guajolota)", "Bolillo calientito", "Hacer coperacha pal pomo",
-          "Decir 'Ahorita voy'", "El tianguis de los domingos", "Merenguero con duela", "Globero en el parque",
-          "Ropavejero gritando", "Afilador con su silbato", "Camión de la basura con campana", "Microbús a toda velocidad",
-          "Metro Pantitlán en hora pico", "El zócalo de la CDMX", "Monumento a la Revolución", "Ángel de la Independencia",
-          "Castillo de Chapultepec", "Cenotes de Yucatán", "Cancún", "Cabos San Lucas",
-          "Cañón del Sumidero", "San Miguel de Allende", "Volador de Papantla", "Jarabe Tapatío",
-          "Rebozo tradicional", "Sombrero de charro", "Guitarra de Paracho", "Barro negro de Oaxaca",
-          "Alebrije multicolor", "Platería de Taxco", "Quesillo oaxaqueño trenzado", "Carnitas estilo Michoacán",
-          "Aguachile verde de camarón", "Pescado a la veracruzana", "Cochinita pibil en hoja de plátano", "Sopa de lima yucateca",
-          "Tacos de birria con consomé", "Arrachera norteña con cebollitas", "Carne asada un domingo", "Discada norteña"
-        ]
-      },
-      "📼 Nostalgia de los 90s & 2000s": {
-        icon: "💾",
-        words: [
-          "Colección de Tazos de Pokémon", "Rentar películas en Blockbuster", "Mascota virtual Tamagotchi",
-          "Cinta VHS que rebobinar con lápiz", "Consola Game Boy Color", "Nintendo 64 con cartuchos",
-          "Música en Walkman de cassette", "Reproductor Discman que saltaba", "Boleto de papel del metro",
-          "Jugar a las Escondidas en la calle", "Botes de Plastilina Play-Doh", "Jugar al Trompo con púa",
-          "Canicas de vidrio y agüitas", "Patineta de dos ruedas Razor", "Tenis con luces en el talón",
-          "Enciclopedia Microsoft Encarta", "Chicles Motita de plátano", "Paleta Tutsi Pop con chicle",
-          "Jugar al Avión en la banqueta", "El timbre de salida de la primaria", "Cámara desechable con rollo",
-          "Cabina de teléfono público de tarjeta", "MSN Messenger mandando zumbidos", "Poner apodo en el MSN con muñequitos",
-          "Descargar canciones en Ares", "Descargar música en Limewire con virus", "Quemar un CD en Nero Burning ROM",
-          "Cuidar tu página de Hi5", "Personalizar perfil en MySpace", "Reproductor Winamp con skins",
-          "Juego de la Viborita en Nokia 3310", "Celular Motorola Razr V3 plegable", "Laser portátil con figuras",
-          "Manitas pegajosas de las maquinitas", "Brincacharcos inflables", "Resorte elástico para saltar",
-          "Furby que hablaba en la noche", "Muñecos Polly Pocket diminutos", "Peluches Beanie Babies",
-          "Hot Wheels con pista naranja", "Juego Twister que se enredaban", "Operando sacando piezas",
-          "Adivina Quién con ventanitas", "Juegos de mesa Serpientes y Escaleras", "Cartas de Yu-Gi-Oh!",
-          "Álbum de estampas Panini", "Tatuajes de agua de las papas", "Hielocos de Coca-Cola",
-          "Vasos de Batman de McDonald's", "Cajita Feliz de los 90", "Dulce Lucas Muecas",
-          "Paleta Chipilín", "Chiclosos Kooky Toy", "Refresco Manzanita Sol en vidrio",
-          "Televisión gorda de cinescopio", "Cambiar canales con perilla", "Conectar cable RCA amarillo y rojo",
-          "Antena de conejo con papel aluminio", "Revista TVyNovelas", "Revista Eres",
-          "Revista Club Nintendo", "Programa de televisión Otro Rollo", "Adal Ramones con su gorra",
-          "El Monólogo de los martes", "Carrusel de Niños con Cirilo", "Telenovela Cómplices al Rescate",
-          "Amigos por Siempre", "El Diario de Daniela", "Cebollitas en la tele",
-          "Castillo Embrujado de Fantasías", "Rugrats: Aventuras en Pañales", "Hey Arnold! con Helga Pataki",
-          "Las Chicas Superpoderosas", "El Laboratorio de Dexter", "Johnny Bravo frente al espejo",
-          "Coraje el Perro Cobarde", "Ed, Edd y Eddy", "Animaniacs saltando",
-          "Tiny Toons", "Caballeros del Zodiaco", "Sailor Moon con su cetro",
-          "Dragon Ball Z en Canal 5", "Ranma 1/2", "Digimon en la televisión",
-          "Los Power Rangers originales", "Art Attack con Rui Torres", "Zoboomafoo saltando",
-          "Bananos en Pijamas", "El Chavo animado", "Barney el Dinosaurio morado",
-          "Teletubbies con la aspiradora", "Blue de las Pistas de Blue", "Lápiz de minas intercambiables",
-          "Goma bicolor que borraba pluma", "Mochila con rueditas que rechinaba", "Estuche lapicera desplegable",
-          "Sacapuntas de manivela", "Juegos de PlayStation 1 con disco negro", "Memory Card de 8 megabytes",
-          "Bailar en tapete Dance Dance Revolution", "Pistola GunCon para Time Crisis", "Arcade de maquinitas King of Fighters",
-          "Fichas de dominó de madera", "Yoyo Duncan con truco 'El Dormilón'", "Pega-locos en el techo"
-        ]
-      },
-      "🎤 Canciones & Artistas Legendarios": {
-        icon: "🎶",
-        words: [
-          "Luis Miguel", "Bad Bunny", "Shakira", "Michael Jackson haciendo Moonwalk", "Freddie Mercury y Queen",
-          "Rosalía cantando Motomami", "Daddy Yankee 'El Cangri'", "Taylor Swift", "Beyoncé", "Billie Eilish",
-          "Peso Pluma", "RBD / Grupo Rebelde", "Karol G 'La Bichota'", "Juan Gabriel 'El Divo de Juárez'", "Selena Quintanilla",
-          "Eminem rapeando a toda velocidad", "Madonna", "Los Ángeles Azules", "Chayanne bailando 'Torero'", "Enrique Iglesias",
-          "Dua Lipa", "Justin Bieber en los 2010", "Bruno Mars", "Pitbull gritando '¡Dale!'", "Rauw Alejandro",
-          "Bailar 'Macarena' en una boda", "Bailar 'Payaso de Rodeo'", "Cantar 'Despacito'", "Cantar 'La Incondicional'",
-          "The Beatles cruzando Abbey Road", "Elvis Presley moviendo las caderas", "Kurt Cobain de Nirvana", "Bob Marley fumando reggae",
-          "Guns N' Roses con Slash", "Coldplay con pulseras de luces", "Adele cantando 'Hello'", "Rihanna en el Super Bowl",
-          "Katy Perry volando", "Lady Gaga con traje de carne", "David Bowie como Ziggy Stardust", "Elton John al piano",
-          "Céline Dion en el Titanic", "Whitney Houston con notas altas", "Britney Spears con la serpiente", "Avril Lavigne en patineta",
-          "Linkin Park con Chester", "Green Day tocando punk", "Blink-182 corriendo desnudos", "Red Hot Chili Peppers sin camisa",
-          "Metallica agitando la cabeza", "AC/DC con Angus Young", "Gorillaz en caricatura", "Daft Punk con cascos robot",
-          "Avicii mezclando EDM", "David Guetta", "Tiësto", "Calvin Harris",
-          "J Balvin cantando reggaetón", "Maluma 'Baby'", "Ozuna el negrito ojos claros", "Anuel AA gritando 'Real hasta la muerte'",
-          "Camilo con su bigote", "Sebastian Yatra", "Carlos Vives en bicicleta", "Marc Anthony cantando salsa",
-          "Ricky Martin bailando 'Livin la Vida Loca'", "Gloria Trevi despeinada", "Paulina Rubio la Chica Dorada", "Thalía con costillas",
-          "Alejandra Guzmán", "Café Tacvba bailando", "Molotov rapeando con furia", "Zoé con León Larregui",
-          "Enanitos Verdes cantando 'Lamento Boliviano'", "Soda Stereo con Gustavo Cerati", "Héroes del Silencio", "Hombres G con Marta",
-          "Maná tocando en el muelle de San Blas", "Panteón Rococó con ska", "Julieta Venegas con acordeón", "Natalia Lafourcade",
-          "Mon Laferte", "Calle 13 con Residente", "Kase.O rapeando", "C. Tangana con sobremesa",
-          "Camilo Sesto", "José José cantando 'El Triste'", "Rocío Dúrcal cantando con mariachi", "Marco Antonio Solís 'El Buki'",
-          "Los Bukis", "Los Tigres del Norte", "Bronco con Lupe Esparza", "Intocable en el acordeón",
-          "Grupo Frontera", "Christian Nodal", "Carin León", "Julión Álvarez",
-          "Banda MS cantando baladas", "La Arrolladora Banda El Limón", "Bizarrap en su estudio", "Quevedo cantando 'Quédate'"
-        ]
-      },
-      "🎬 Películas & Series Legendarias": {
-        icon: "🍿",
-        words: [
-          "Titanic hundiéndose con Jack y Rose", "Harry Potter volando en escoba", "El Rey León en la roca del rey",
-          "Breaking Bad con Walter White cocinando", "Stranger Things en el Upside Down", "Shrek en su pantano con Burro",
-          "Star Wars: Darth Vader respirando", "Avengers: Endgame con chasquido de Thanos", "Coco cantando 'Recuérdame'",
-          "Jurassic Park con el Tiranosaurio Rex", "El Señor de los Anillos: Frodo y el Anillo", "La Casa de Papel con máscaras de Dalí",
-          "Spider-Man trepando la pared", "Barbie en su mundo rosa de plástico", "Toy Story con Woody y Buzz Lightyear",
-          "El Juego del Calamar con luz verde y roja", "Batman: El Caballero de la Noche con Joker", "Mi Pobre Angelito poniendo trampas en casa",
-          "Matrix esquivando balas en cámara lenta", "Buscando a Nemo en el arrecife", "Piratas del Caribe con Jack Sparrow ebrio",
-          "Juego de Tronos en el Trono de Hierro", "Monsters Inc. con Boo y Sullivan", "Gladiador peleando en el Coliseo",
-          "Interestelar viajando por agujeros negros", "Volver al Futuro con el auto DeLorean", "Los Juegos del Hambre con la flecha",
-          "The Walking Dead escapando de zombies", "Forrest Gump corriendo sin parar", "Ratatouille con la rata cocinando",
-          "El Padrino acariciando a su gato", "Pulp Fiction bailando twist", "El Club de la Pelea sin reglas",
-          "Inception con el trompo girando", "El Exorcista girando la cabeza 360", "El Resplandor gritando 'Here's Johnny!'",
-          "Psicosis en la regadera con cuchillo", "Tiburón comiéndose el barco", "E.T. El Extraterrestre en la canastilla",
-          "Indiana Jones huyendo de la roca rodante", "Terminator diciendo 'Hasta la vista, baby'", "Rocky Balboa subiendo las escaleras de Filadelfia",
-          "Rambo disparando en la selva", "Duro de Matar en los ductos de ventilación", "Misión Imposible colgando de un cable",
-          "John Wick buscando a su perrito", "Mad Max en el desierto con autos locos", "Los Simpson en el sillón de la sala",
-          "Malcolm el de en Medio con Dewey y Reese", "Friends tomando café en el sillón naranja", "The Office con Michael Scott haciendo bromas",
-          "Better Call Saul llamando al abogado", "Peaky Blinders caminando con boinas", "The Crown con la Reina Isabel",
-          "Dark viajando en el tiempo bajo la cueva", "The Last of Us con infectados clickers", "Euphoria con brillos en la cara",
-          "La Teoría del Big Bang diciendo 'Bazinga'", "Cómo Conocí a Tu Madre con el paraguas amarillo", "Modern Family en entrevista a cámara",
-          "Grey's Anatomy operando corazones", "Doctor House cojeando con su bastón", "Lost perdidos en la isla desierta",
-          "Chernobyl con trajes antirradiación", "Squid Game con el hombre del traje", "Wednesday Adams bailando raro",
-          "Aladdín frotando la lámpara mágica", "La Bella y la Bestia bailando en el salón", "Mulan peleando con espadas",
-          "Hércules venciendo a la Hidra", "Tarzán deslizándose por los árboles", "Pocahontas con el viento",
-          "Up: Una Aventura de Altura con globos", "WALL-E compactando basura", "Los Increíbles estirándose",
-          "Cars con el Rayo McQueen gritando Cuchao", "Intensa-Mente con Tristeza y Alegría", "Soul tocando el piano",
-          "Kung Fu Panda haciendo la llave dactilar", "Madagascar con los pingüinos planeando", "Cómo Entrenar a Tu Dragón con Chimuelo",
-          "Megamente con cabeza azul", "Gru y los Minions comiendo bananas", "La Era de Hielo con la ardilla y la bellota",
-          "Coraline y la Puerta Secreta con ojos de botón", "El Extraño Mundo de Jack en Halloween", "La Novia Cadáver",
-          "El Cadáver de la Novia", "Beetlejuice diciendo su nombre tres veces", "Los Cazafantasmas atrapando a Pegajoso",
-          "Gremlins mojándose con agua", "Chucky el Muñeco Diabólico corriendo con cuchillo", "Scream con la máscara blanca al teléfono",
-          "It: El Payaso Pennywise con el globo rojo", "El Conjuro con la muñeca Annabelle", "Actividad Paranormal con cámaras nocturnas"
-        ]
-      },
-      "🍔 Comidas & Platillos del Mundo": {
-        icon: "🍕",
-        words: [
-          "Pizza Napolitana a la leña", "Hamburguesa doble carne con tocino", "Sushi Roll de salmón y aguacate",
-          "Tacos al pastor con piña", "Paella valenciana con mariscos", "Croissant francés con mantequilla",
-          "Ramen japonés bien caliente", "Lasagna boloñesa con queso gratinado", "Ceviche peruano con camote",
-          "Crepa dulce de Nutella con plátano", "Churros calientes rellenos de cajeta", "Hot Dog con tocino y cebolla caramelizada",
-          "Arepas rellenas de queso y carne", "Café capuchino con espuma", "Té de Boba con perlas de tapioca",
-          "Helado artesanal de pistacho", "Donas glaseadas recién horneadas", "Nachos con queso cheddar derretido",
-          "Costillitas BBQ bañadas en salsa", "Waffles con miel de maple y fresas", "Falafel crujiente con hummus",
-          "Empanadas argentinas de carne cortada a cuchillo", "Guacamole casero con totopos", "Pollo frito crujiente estilo Kentucky",
-          "Ensalada César con crutones", "Papas a la francesa con catsup", "Burrito gigante de carne asada",
-          "Quesadillas de queso Oaxaca", "Sopa de cebolla francesa con queso", "Fondue de queso suizo con pan",
-          "Fondue de chocolate con malvaviscos", "Peking Duck (Pato laqueado)", "Pad Thai tailandés con cacahuate",
-          "Curry indio con pollo tikka masala", "Pan Naan calientito al horno", "Dim Sum al vapor en canastas de bambú",
-          "Gyozas japonesas doradas", "Tempura de camarones crujientes", "Sashimi fresco de atún",
-          "Mochi japonés relleno de helado", "Tiramisú italiano con café espresso", "Panna Cotta con frutos rojos",
-          "Cannoli siciliano con ricota", "Risotto cremoso de champiñones", "Spaghetti a la carbonara original",
-          "Fettuccine Alfredo con pollo", "Ravioles rellenos de espinaca", "Tacos de carnitas michoacanas",
-          "Tacos de barbacoa de borrego", "Pozole blanco con orégano", "Menudo caliente con tortillas a mano",
-          "Chiles rellenos de picadillo", "Poblano en nogada", "Enchiladas suizas gratinadas",
-          "Enchiladas verdes con pollo deshebrado", "Chilaquiles con huevo estrellado", "Molletes con pico de gallo",
-          "Tlayuda oaxaqueña con tasajo", "Gorditas de nata dulces", "Buñuelos con miel de piloncillo",
-          "Capirotada tradicional", "Panqueques esponjosos con mantequilla", "Bagel con queso crema y salmón ahumado",
-          "Sandwich Club con papas", "Paninis tostados de jamón serrano", "Gazpacho andaluz fresco",
-          "Tortilla de patatas española", "Croquetas de jamón ibérico", "Pulpo a la gallega con pimentón",
-          "Baguette francesa recién salida del horno", "Ratatouille de verduras al horno", "Goulash húngaro especiado",
-          "Bratwurst alemana con mostaza", "Pretzel gigante con sal de grano", "Schnitzel vienés empanizado",
-          "Kebab turco con salsa de ajo", "Baklava de pistacho con miel", "Shakshuka con huevos escalfados",
-          "Tajín marroquí de cordero", "Cuscús con verduras y pasas", "Feijoada brasileña con frijoles negros",
-          "Pão de queijo esponjoso", "Asado de tira a la parrilla", "Choripán con chimichurri",
-          "Lomo saltado peruano con papas", "Causa limeña de pollo", "Sancocho colombiano con plátano",
-          "Bandeja paisa con chicharrón", "Pupusas salvadoreñas con curtido", "Tamal de elote dulce con crema",
-          "Esquites con mayonesa y queso rallado", "Banderilla de salchicha frita", "Palomitas de mantequilla del cine",
-          "Alitas de pollo con salsa búfalo picante", "Nuggets de pollo con aderezo ranch", "Aros de cebolla crujientes"
-        ]
-      },
-      "🦁 Reino Animal & Bichos": {
-        icon: "🦒",
-        words: [
-          "Elefante africano con trompa larga", "Pingüino emperador caminando en el hielo", "Jirafa estirando su cuello largo",
-          "Tiburón blanco con dientes filosos", "Canguro dando saltos gigantes", "Oso Panda comiendo cañas de bambú",
-          "León rugiendo en la sabana", "Delfín saltando en las olas", "Chimpancé rascándose la cabeza",
-          "Águila calva volando en picada", "Cocodrilo del pantano con la boca abierta", "Oso polar nadando en agua helada",
-          "Camaleón cambiando de color en una rama", "Lobo aullando a la luna llena", "Tortuga marina gigante nadando",
-          "Koala durmiendo en un árbol de eucalipto", "Hipopótamo sumergido en el lodo", "Tigre de bengala acechando presas",
-          "Flamenco rosado parado en una pata", "Murciélago colgando de cabeza en una cueva", "Perezoso moviéndose en cámara lenta",
-          "Pavo real abriendo su abanico de plumas", "Mosquito zumbando en el oído de noche", "Mapache buscando comida en la basura",
-          "Gorila golpeándose el pecho", "Guepardo corriendo a máxima velocidad", "Rinoceronte con cuerno filoso",
-          "Cebra con rayas blancas y negras", "Hiena riéndose en grupo", "Suricata vigilando parada en dos patas",
-          "Lémur con cola anillada", "Orangután columpiándose de ramas", "Panda rojo en los árboles",
-          "Castor construyendo una presa de madera", "Ornitorrinco con pico de pato", "Equidna con espinas",
-          "Ballena jorobada cantando", "Orca saltando sobre el agua", "Foca aplaudiendo con sus aletas",
-          "Morsa con colmillos gigantes", "Nutria marina flotando de espaldas", "Pulpo expulsando tinta negra",
-          "Calamar gigante de las profundidades", "Medusa brillante que da toques", "Manta raya planeando bajo el agua",
-          "Caballito de mar enganchado con la cola", "Pez payaso escondido en la anémona", "Pez globo inflado de espinas",
-          "Anguila eléctrica dando descargas", "Barracuda con dientes afilados", "Búho girando la cabeza en la noche",
-          "Halcón peregrino cazando palomas", "Tucán con pico gigante multicolor", "Guacamaya roja repitiendo palabras",
-          "Colibrí moviendo las alas super rápido", "Pelícano guardando peces en su pico", "Cigüeña cargando un bebé en una bolsa",
-          "Buitre esperando en el desierto", "Avestruz escondiendo la cabeza en la tierra", "Pájaro carpintero picando madera",
-          "Cisne blanco nadando elegante", "Ganso enojado persiguiendo gente", "Pato haciendo cuac",
-          "Gallo cantando al amanecer", "Gallina empollando huevos", "Serpiente de cascabel haciendo sonar la cola",
-          "Boa constrictora enrollada en un tronco", "Cobra real abriendo su capucha", "Dragón de Komodo con saliva venenosa",
-          "Iguana verde tomando el sol en una piedra", "Gecko trepando por la pared de la casa", "Rana venenosa de colores brillantes",
-          "Sapo inflando su garganta en el río", "Salamandra de agua", "Ajolote mexicano sonriendo en la pecera",
-          "Tarántula peluda caminando despacio", "Escorpión negro levantando su aguijón", "Ciempiés gigante corriendo rápido",
-          "Escarabajo pelotero empujando su bola", "Luciérnaga brillando en el pasto", "Libélula con alas transparentes",
-          "Abeja reina en su panal con miel", "Avispa brava picando en el parque", "Hormiga cargando una hoja gigante",
-          "Mantis religiosa rezando antes de atacar", "Grillo cantando debajo de la cama", "Cucaracha voladora que asusta a todos"
-        ]
-      },
-      "🎭 Acciones, Mímica & Verbos": {
-        icon: "🤸",
-        words: [
-          "Bailar salsa apasionadamente con pareja", "Montar un caballo brioso a todo galope", "Tocar una batería imaginaria con baquetas",
-          "Cocinar un huevo estrellado que se pega", "Pintarse las uñas con mucho pulso", "Pelear contra un mosquito invisible en la noche",
-          "Dormirse parado en el metro y dar el cabezazo", "Manejar un auto estándar y que se apague", "Cantar con el micrófono de la regadera",
-          "Hacer sentadillas pesadas en el gimnasio", "Nadar estilo mariposa sin ahogarse", "Destapar un refresco agitado y mojarse todo",
-          "Esquiar montaña abajo y perder el equilibrio", "Tomarse 20 selfies posando con filtros", "Picar una cebolla y llorar a mares",
-          "Caminar como modelo en pasarela de modas", "Ponerse unos pantalones jeans super apretados", "Tirar un penal decisivo en el minuto 90",
-          "Cambiar un foco caliente sin quemarse los dedos", "Pescar un pez gigante con caña y caerse al agua", "Intentar aguantarse las ganas de reírse a carcajadas",
-          "Ponerse gotas en los ojos sin parpadear", "Rascarse la espalda donde no alcanza la mano", "Pisar una pieza de Lego descalzo en la noche",
-          "Comer algo hirviendo y respirar como dragón", "Desarmar un enredo de cables de audífonos", "Enhebrar un hilo en una aguja diminuta",
-          "Intentar estornudar y que se te quite al final", "Tropezar en la calle y disimular caminando rápido", "Abrir un paraguas con viento fuerte y que se voltee",
-          "Comer un chile habanero y buscar agua desesperado", "Bailar breakdance dando vueltas en el piso", "Fingir que sabes tocar guitarra eléctrica con solo de rock",
-          "Caminar sobre brasas de carbón caliente", "Tratar de atrapar una mosca con las dos manos", "Tocar el violín haciendo caras dramáticas",
-          "Hacer malabares con tres manzanas", "Lanzar un boliche y resbalarse en la pista", "Hacer yoga en posición de perro boca abajo",
-          "Dar masajes en la espalda a alguien tenso", "Sacar dinero del cajero cubriendo el teclado", "Empujar una puerta que dice 'Jale'",
-          "Correr persiguiendo el camión que ya se va", "Limpiar los vidrios con periódico y líquido azul", "Planchar una camisa y dejarle una raya chueca",
-          "Tender la cama con sábana de cajón rebelde", "Lavar los trastes con agua helada de madrugada", "Destapar el baño con desatascador de hule",
-          "Pintar una pared con rodillo y mancharse el pelo", "Pasear a un perro gigante que te va arrastrando", "Bañar a un gato que no quiere mojarse",
-          "Dar de comer a las palomas en el parque", "Hacer globos con chicle y que se pegue en la nariz", "Comer espagueti con tenedor sin manchar la playera",
-          "Intentar pelar una naranja con las manos", "Chuparse los dedos después de comer papitas con salsa", "Morderse la lengua masticando comida",
-          "Sacar una pestaña del ojo con un espejo", "Hacer dominadas con balón de fútbol sin que caiga", "Lanzar un dardo buscando el centro del tablero",
-          "Jugar tiro al blanco con pistola de agua", "Esconderse detrás de una cortina muy delgada", "Hacerse el dormido cuando entra tu mamá al cuarto",
-          "Espiar por el cerrojo de la puerta", "Contar un secreto al oído con emoción", "Gritar de terror en la montaña rusa",
-          "Sentir náuseas en un barco con olas gigantes", "Caminar como pingüino en piso mojado", "Hacer lagartijas hasta no poder más",
-          "Saltar la cuerda a doble velocidad", "Bailar la Macarena en cámara lenta", "Dar un apretón de manos super incómodo",
-          "Abrazar a alguien que huele muy rico", "Saludar a lo lejos a alguien que no te estaba viendo", "Buscar los lentes teniéndolos puestos en la cabeza"
-        ]
-      },
-      "⚽ Deportes, Juegos & Atletas": {
-        icon: "🏆",
-        words: [
-          "Lionel Messi levantando la Copa del Mundo", "Cristiano Ronaldo gritando '¡Siuuu!'", "Michael Jordan volando desde la línea de tiro",
-          "Canelo Álvarez esquivando golpes en el ring", "Usain Bolt celebrando antes de cruzar la meta", "Serena Williams rematando con furia",
-          "LeBron James clavando el balón en la canasta", "Diego Maradona haciendo la Mano de Dios", "Pelé festejando su tercer mundial",
-          "Tom Brady lanzando un pase de touchdown", "Tiger Woods embocando en el hoyo 18", "Roger Federer jugando revés perfecto",
-          "Neymar rodando por el pasto tras una falta", "Checo Pérez subiéndose al podio de Fórmula 1", "Kylian Mbappé corriendo por la banda",
-          "Muhammad Ali bailando como mariposa", "Mike Tyson mordiendo la oreja en el ring", "Nadar 100 metros estilo libre en Juegos Olímpicos",
-          "Tiro con arco apuntando al centro amarillo", "Encestar una canasta de tres puntos en el último segundo", "Meter un golazo de chilena al ángulo",
-          "Pelear en la jaula de la UFC", "Correr una maratón de 42 kilómetros con calambres", "Hacer un jonrón con bases llenas en béisbol",
-          "Bateador ponchado con tres strikes", "Portero atajando un penal en la tanda definitiva", "Lanzamiento de jabalina con grito de fuerza",
-          "Gimnasta olímpica dando vueltas en la viga", "Clavadista saltando desde la plataforma de 10 metros", "Patinaje artístico sobre hielo con giros",
-          "Salto con garrocha superando la barra", "Carrera de 110 metros con vallas", "Levantamiento de pesas olímpico con barra curva",
-          "Combate de Judo derribando al rival con kimono", "Taekwondo pateando al casco del oponente", "Esgrima tocando con la punta de la espada",
-          "Lucha grecorromana cuerpo a cuerpo en el tapete", "Partido de Rugby con choque de hombros", "Fútbol americano con tackleada brutal",
-          "Carrera de ciclismo subiendo el Tour de Francia", "Montar bicicleta de montaña en bajada pedregosa", "Skater haciendo truco Kickflip en patineta",
-          "Surfear una ola gigante de 15 metros en Hawái", "Boxeo sonando la campana al final del round", "Árbitro sacando tarjeta roja directa",
-          "Celebrar un gol quitándose la camiseta", "Atleta con antorcha olímpica encendiendo el pebetero", "Correr en pista de atletismo con zapatillas de clavos",
-          "Jugar tenis de mesa / Ping-Pong a máxima velocidad", "Partido de bádminton con gallito volante", "Jugar boliche y hacer una chuza perfecta (Strike)",
-          "Jugar billar metiendo la bola ocho en la esquina", "Partida de ajedrez cantando jaque mate", "Lanzar frisbee en la playa con amigos",
-          "Carrera de caballos pura sangre en el hipódromo", "Piloto de Nascar dando vueltas en óvalo a 300 km/h", "Polo a caballo con mazo de madera",
-          "Salto de longitud cayendo en la fosa de arena", "Lanzamiento de bala con peso de acero", "Lanzamiento de disco girando en círculo",
-          "Curling barriendo el hielo con escobas", "Bobsleigh descendiendo en trineo a toda velocidad", "Snowboard bajando una ladera de nieve virgen",
-          "Hockey sobre hielo con pelea de jugadores y bastones", "Partido de voleibol salvando la pelota en el suelo", "Voleibol de playa con arena en los pies",
-          "Carrera de relevos pasando la estafeta sin tirarla", "Corredor de cien metros planos en tacos de salida", "Entrenador enojado gritando desde la banca",
-          "Porristas haciendo una pirámide humana en el estadio", "Ola en el estadio hecha por 80 mil personas", "Comentarista gritando '¡Goooool!' por un minuto",
-          "VAR revisando una jugada milimétrica en pantalla", "Levantar el trofeo de la Champions League", "Medalla de oro colgada en el cuello con el himno nacional"
-        ]
-      },
-      "⚡ Ficción, Caricaturas & Superhéroes": {
-        icon: "🦸",
-        words: [
-          "Iron Man encendiendo sus propulsores en las manos", "Goku reuniendo energía para la Genkidama", "Pikachu lanzando un Impactrueno amarillo",
-          "Homero Simpson estrangulando a Bart en el sillón", "Elsa cantando 'Libre Soy' congelando todo", "Mickey Mouse bailando con guantes blancos",
-          "El Joker riéndose como desquiciado en Gotham", "Spider-Man lanzando telarañas entre edificios", "Darth Vader usando la Fuerza para ahorcar a distancia",
-          "Yoda hablando con las palabras al revés", "Shrek asustando a los aldeanos en el bosque", "Bob Esponja volteando Cangreburgers bajo el agua",
-          "Harry Potter lanzando el hechizo 'Expecto Patronum'", "Super Mario comiéndose un hongo para crecer gigante", "El Grinch sonriendo maliciosamente en Navidad",
-          "Wolverine sacando sus garras metálicas de adamantium", "Thanos haciendo el chasquido con las 6 gemas", "Batman desapareciendo en una nube de humo",
-          "Naruto corriendo con los brazos hacia atrás", "Scooby-Doo temblando de miedo en brazos de Shaggy", "Minion amarillo comiendo una banana gigante",
-          "Capitán América lanzando su escudo que rebota", "Thor levantando el martillo con rayos del cielo", "Hulk aplastando tanques y rompiendo su ropa",
-          "Doctor Strange abriendo portales de fuego circulares", "Black Panther cruzando los brazos diciendo 'Wakanda'", "Deadpool hablando directamente a la cámara",
-          "Superman usando sus rayos láser por los ojos", "Mujer Maravilla usando el lazo dorado de la verdad", "Flash corriendo tan rápido que viaja en el tiempo",
-          "Aquaman hablando con tiburones y ballenas", "Vegeta transformándose en Super Saiyajin fase dios", "Gohan lanzando el Kamehameha con un solo brazo",
-          "Freezer en su nave espacial flotante", "Majin Buu convirtiendo a la gente en chocolate", "Sailor Moon castigándote en el nombre de la Luna",
-          "Ash Ketchum volteándose la gorra hacia atrás", "Charizard lanzando llamaradas de fuego", "Donatello de las Tortugas Ninja comiendo pizza",
-          "Optimus Prime transformándose de camión a robot", "Megatrón disparando su cañón de plasma", "Ben 10 golpeando el Omnitrix en su muñeca",
-          "Danny Phantom volviéndose un fantasma intangible", "Timmy Turner pidiendo deseos locos a Cosmo y Wanda", "Jimmy Neutrón teniendo un '¡Llamarada de genio!'",
-          "Phineas y Ferb construyendo una montaña rusa en el patio", "Perry el Ornitorrinco poniéndose su sombrero de detective", "Mojo Jojo explicando su plan maquiavélico",
-          "Coraje el Perro Cobarde gritando frente a un monstruo", "Dexter peleando contra Dee Dee en su laboratorio secreto", "Samurai Jack cortando robots con su katana",
-          "Bugs Bunny masticando zanahoria diciendo '¿Qué hay de nuevo, viejo?'", "El Pato Lucas furioso diciendo '¡Eres despreciable!'", "El Coyote armando trampas marca ACME para el Correcaminos",
-          "Silvestre intentando comerse a Piolín en su jaula", "Taz el Demonio de Tasmania girando en tornado", "Tom persiguiendo a Jerry con una sartén de cocina",
-          "Scooby y Shaggy comiéndose un sándwich de 10 pisos", "Vilma buscando sus lentes perdidos en el piso", "Pedro Picapiedra gritando '¡Yabba Dabba Doo!'",
-          "Pablo Mármol riéndose en el troncomóvil", "Los Supersónicos volando en autos cápsula espaciales", "Pinky y Cerebro tratando de conquistar el mundo",
-          "Sonic el Erizo rodando en bola azul a mil por hora", "Knuckles trepando paredes de piedra", "Bowser escupiendo bolas de fuego en el castillo",
-          "Princesa Peach flotando con su vestido rosado", "Luigi temblando con su aspiradora de fantasmas", "Link levantando la Espada Maestra en Zelda",
-          "Donkey Kong tirando barriles de madera por rampas", "Crash Bandicoot girando y rompiendo cajas de manzanas", "Pac-Man comiendo bolitas amarillas escapando de fantasmas",
-          "Kratos desenvainando las Espadas del Caos con cadenas", "Master Chief disparando con su rifle de asalto verde", "Sora blandiendo la llave espada en Kingdom Hearts"
-        ]
-      },
-      "🧑‍🚒 Profesiones, Trabajos & Oficios": {
-        icon: "💼",
-        words: [
-          "Bombero subiendo la escalera para apagar un fuego", "Cirujano operando un corazón latiendo en quirófano", "Piloto de avión comercial en medio de turbulencias",
-          "Astronauta dando saltos en gravedad cero en la Luna", "Detective con lupa buscando huellas digitales en la escena", "Mesero cargando cinco platos calientes en un brazo",
-          "Dentista con taladro zumbando buscando una muela picada", "Peluquero haciendo un corte de cabello moderno con tijeras", "Pintor bohemio manchado de óleo frente a su lienzo",
-          "Mago sacando un conejo blanco de un sombrero de copa", "Abogado gritando con furia '¡Protesto, Señor Juez!'", "Profesor regañando a la clase y aventando el gis",
-          "Guía de turistas con paraguas y megáfono en el museo", "Fotógrafo de National Geographic en la selva con leones", "Mecánico debajo de un auto con la cara llena de grasa",
-          "Catador profesional probando vinos y oliendo la copa", "Influencer grabando con aro de luz y pidiendo likes", "Veterinario poniéndole una inyección a un perro bravo",
-          "Chef de cocina gourmet gritando órdenes a sus cocineros", "Carpintero usando serrucho y martillando clavos de madera", "Albañil pegando ladrillos con mezcla de cemento fresco",
-          "Electricista cortando cables para no recibir toques", "Plomero arreglando una fuga de agua con llave inglesa", "Cartero huyendo de un perro bravo con las cartas en mano",
-          "Repartidor de aplicación en moto esquivando baches", "Cajero del supermercado pasando códigos de barras 'Bip Bip'", "Guardia de seguridad vigilando monitores comiendo donas",
-          "Policía de tránsito sonando el silbato en la esquina", "Juez golpeando el mazo de madera en el estrado", "Arquitecto enrollando planos gigantes de construcción",
-          "Ingeniero civil con casco blanco y chaleco reflejante", "Periodista con micrófono reportando en medio de un huracán", "Meteorólogo señalando el mapa del clima en televisión",
-          "Actor de telenovela llorando dramáticamente en escena", "Doble de acción cayendo desde un edificio en llamas", "Bailarín de ballet clásico girando en puntas de pie",
-          "Cantante de ópera rompiendo una copa de cristal con la voz", "Director de orquesta moviendo la batuta con pasión", "Bibliotecario pidiendo silencio absoluto con el dedo",
-          "Arqueólogo desenterrando huesos de dinosaurio con brocha", "Buzo profesional sumergiéndose a buscar tesoros en el fondo", "Salvavidas corriendo en cámara lenta hacia el mar",
-          "Entrenador de delfines haciendo sonar su silbato bajo el agua", "Apicultor con traje blanco sacando panales llenos de abejas", "Granjero ordeñando una vaca al amanecer en el establo",
-          "Pescador jalando redes pesadas llenas de pescados", "Minero con linterna en el casco picando piedra en el túnel", "Jardinero podando el pasto con podadora de motor ruidosa",
-          "Florista armando ramos de rosas con espinas", "Panadero amasando harina con las manos llenas de polvo", "Pastelero decorando un pastel de bodas de tres pisos",
-          "Carnicero afilando su cuchillo gigante con la chaira", "Zapatero remendando la suela de un zapato viejo con tachuelas", "Sastre tomando medidas de cintura con cinta métrica",
-          "Joyero examinando un diamante brillante con su monóculo", "Tatuador zumbando con la máquina de aguja en la piel", "Maquillista aplicando sombras y labial con brochas",
-          "Masajista tronando la espalda de un cliente adolorido", "Barista preparando figuras de corazón en la espuma del café", "Sommelier recomendando el maridaje perfecto en el restaurante",
-          "Bibliotecario acomodando libros pesados en el librero alto", "Científico mezclando líquidos de colores en matraces humeantes", "Biólogo marino examinando corales bajo el microscopio"
+          // Liga MX
+          "Club América", "Chivas (Guadalajara)", "Cruz Azul", "Pumas UNAM", "Tigres UANL",
+          "Monterrey (Rayados)", "Toluca", "Santos Laguna", "León", "Pachuca",
+          "Atlas", "Necaxa", "Puebla", "Tijuana (Xolos)", "Querétaro (Gallos)",
+          "Mazatlán FC", "Atlético de San Luis", "FC Juárez (Bravos)",
+          // LaLiga
+          "Real Madrid", "FC Barcelona", "Atlético de Madrid", "Sevilla", "Real Betis",
+          "Athletic Club", "Real Sociedad", "Valencia", "Villarreal", "Celta de Vigo",
+          "Getafe", "Osasuna", "Espanyol", "Rayo Vallecano", "Mallorca",
+          "Girona", "Deportivo Alavés", "Las Palmas",
+          // Premier League
+          "Manchester City", "Manchester United", "Liverpool", "Arsenal", "Chelsea",
+          "Tottenham Hotspur", "Newcastle United", "Aston Villa", "Everton", "West Ham United",
+          "Wolverhampton", "Brighton", "Fulham", "Crystal Palace", "Brentford",
+          "Nottingham Forest", "Leicester City", "Southampton",
+          // Serie A
+          "Juventus", "Inter de Milán", "AC Milan", "AS Roma", "Lazio",
+          "Napoli", "Fiorentina", "Atalanta", "Torino", "Bologna",
+          "Udinese", "Genoa", "Cagliari", "Hellas Verona", "Parma", "Sampdoria",
+          // Bundesliga
+          "Bayern Múnich", "Borussia Dortmund", "Bayer Leverkusen", "RB Leipzig", "Eintracht Frankfurt",
+          "VfB Stuttgart", "Borussia Mönchengladbach", "Wolfsburg", "Werder Bremen", "Schalke 04",
+          "Hamburgo SV", "Colonia (FC Köln)", "Hoffenheim", "Mainz 05",
+          // Eredivisie & Portugal
+          "Ajax", "PSV Eindhoven", "Feyenoord", "AZ Alkmaar", "FC Twente", "FC Utrecht", "Vitesse", "Heerenveen",
+          "Benfica", "Porto", "Sporting CP (Sporting de Lisboa)", "Sporting de Braga", "Vitória de Guimarães", "Boavista", "Marítimo", "Gil Vicente",
+          // Sudamérica
+          "Boca Juniors", "River Plate", "Flamengo", "Palmeiras", "Corinthians", "Peñarol", "Nacional de Montevideo", "Colo-Colo", "Olimpia", "Atlético Nacional"
         ]
       },
       "🔴 Pokémon (Kanto - Gen 1)": {
-        icon: "⚡",
+        icon: "🔴",
         words: [
           "Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon", "Charizard",
           "Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree",
           "Weedle", "Kakuna", "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot",
           "Rattata", "Raticate", "Spearow", "Fearow", "Ekans", "Arbok",
-          "Pikachu", "Raichu", "Sandshrew", "Sandslash", "Nidoran♀", "Nidorina",
-          "Nidoqueen", "Nidoran♂", "Nidorino", "Nidoking", "Clefairy", "Clefable",
+          "Pikachu", "Raichu", "Sandshrew", "Sandslash", "Nidoran Hembra", "Nidorina",
+          "Nidoqueen", "Nidoran Macho", "Nidorino", "Nidoking", "Clefairy", "Clefable",
           "Vulpix", "Ninetales", "Jigglypuff", "Wigglytuff", "Zubat", "Golbat",
           "Oddish", "Gloom", "Vileplume", "Paras", "Parasect", "Venonat",
           "Venomoth", "Diglett", "Dugtrio", "Meowth", "Persian", "Psyduck",
@@ -635,10 +389,181 @@
           "Omastar", "Kabuto", "Kabutops", "Aerodactyl", "Snorlax", "Articuno",
           "Zapdos", "Moltres", "Dratini", "Dragonair", "Dragonite", "Mewtwo", "Mew"
         ]
+      },
+      "📺 Caricaturas": {
+        icon: "📺",
+        words: [
+          "Doug", "Rugrats", "Ren y Stimpy", "La Vida Moderna de Rocko", "¡Oye, Arnold!",
+          "The Angry Beavers", "CatDog", "Los Thornberrys", "Bob Esponja", "Rocket Power",
+          "As Told by Ginger", "Los Padrinos Mágicos", "Invasor Zim", "Zona Tiza", "Las Aventuras de Jimmy Neutrón: El Niño Genio",
+          "La Robot Adolescente", "Danny Phantom", "Avatar: La leyenda de Aang", "Catscratch", "El Tigre: Las Aventuras de Manny Rivera",
+          "Tak y el Poder de Juju", "La Granja", "Mighty B!", "Fanboy y Chum Chum", "Planeta Sheen",
+          "T.U.F.F. Puppy", "La Leyenda de Korra", "Sanjay y Craig", "Breadwinners", "Rugrats Crecidos",
+          "El Show de Patricio Estrella", "El Laboratorio de Dexter", "Las Chicas Superpoderosas", "Coraje, el perro cobarde", "Ed, Edd y Eddy",
+          "Johnny Bravo", "La Vaca y el Pollito", "Soy la Comadreja", "KND: Los Chicos del Barrio", "Las Sombrías Aventuras de Billy y Mandy",
+          "Mansión Foster para Amigos Imaginarios", "Samurai Jack", "Ben 10", "El Campamento de Lazlo", "Chowder",
+          "Las Maravillosas Desventuras de Flapjack", "Los Jóvenes Titanes", "Dave, el Bárbaro", "Pucca", "Yin Yang Yo!",
+          "Super Escuadrón Ciber Monos Hiperfuerza ¡Ya!", "Kid vs. Kat", "Gárgolas", "Digimon", "Beyblade",
+          "Dino Rey", "Spider-Man", "Recreo", "Kim Possible", "Phineas y Ferb",
+          "Jake Long: El Dragón Occidental", "Lilo & Stitch: La Serie", "Las Nuevas Locuras del Emperador", "Los Sustitutos", "Brandy y el Sr. Bigotes",
+          "Es tan Raven", "Zack y Cody: Gemelos en Acción", "Hannah Montana", "Los Hechiceros de Waverly Place", "Lizzie McGuire",
+          "Cory en la Casa Blanca", "Kick Buttowski: Medio Doble de Riesgo", "Zeke y Luther", "Estoy en la Banda", "Los Simpson",
+          "Futurama", "Scooby-Doo", "Tom y Jerry", "Looney Tunes", "Dragon Ball Z",
+          "Los Picapiedra", "Los Supersónicos", "Pinky y Cerebro", "Animaniacs", "Fenomenoide",
+          "Caballeros del Zodiaco", "Sailor Moon", "Pokémon", "Yu-Gi-Oh!", "Ranma 1/2",
+          "Inuyasha", "Naruto", "One Piece", "Hora de Aventura", "Un Show Más",
+          "El Increíble Mundo de Gumball", "Gravity Falls", "Star vs. Las Fuerzas del Mal", "Steven Universe", "Daria"
+        ]
+      },
+      "🎬 Películas & Series": {
+        icon: "🍿",
+        words: [
+          // Películas (100% títulos de obras sin personajes)
+          "Titanic", "El Padrino", "Pulp Fiction", "Inception (El Origen)", "Interestelar",
+          "Matrix", "Gladiador", "El Caballero de la Noche", "Parásitos", "Volver al Futuro",
+          "Forrest Gump", "Jurassic Park", "El Club de la Pelea", "Bastardos Sin Gloria", "El Señor de los Anillos",
+          "Harry Potter", "Star Wars", "Avatar", "Avengers: Endgame", "Coco",
+          "Toy Story", "Shrek", "Buscando a Nemo", "Monsters Inc.", "Los Increíbles",
+          "El Rey León", "WALL-E", "Up: Una Aventura de Altura", "Spider-Man: Un Nuevo Universo", "Mi Pobre Angelito",
+          "El Resplandor", "Psicosis", "El Conjuro", "El Exorcista", "Un Lugar en Silencio",
+          "La La Land", "Whiplash", "E.T. El Extraterrestre", "Tiburón", "Rocky",
+          "Rambo", "Terminator 2", "Duro de Matar", "Misión Imposible", "John Wick",
+          "Mad Max: Furia en el Camino", "El Laberinto del Fauno", "Roma", "Amores Perros", "No Se Aceptan Devoluciones",
+          "Y Tu Mamá También", "El Gran Hotel Budapest", "Cisne Negro", "El Pianista", "La Vida es Bella",
+          "Sueño de Fuga", "Milagros Inesperados", "El Silencio de los Inocentes", "Zodiaco", "Seven (Los Siete Pecados)",
+          "Blade Runner", "Alien: El Octavo Pasajero", "Depredador", "Hombres de Negro", "El Gran Gatsby",
+          "El Lobo de Wall Street", "Oppenheimer", "Barbie", "Duna", "Los Juegos del Hambre",
+          "Crepúsculo", "Rápidos y Furiosos", "Piratas del Caribe", "Transformers", "El Quinto Elemento",
+          "Scarface: Cara Cortada", "Kill Bill", "Beetlejuice", "El Viaje de Chihiro", "Mi Vecino Totoro",
+          "Intensamente", "Moana", "Frozen", "Encanto", "Ratatouille", "Cars",
+          // Series de televisión
+          "Breaking Bad", "Better Call Saul", "Game of Thrones", "House of the Dragon", "Stranger Things",
+          "Dark", "Black Mirror", "The Boys", "The Mandalorian", "The Last of Us",
+          "Succession", "Chernobyl", "Fargo", "True Detective", "The Sopranos",
+          "The Wire", "Mad Men", "Peaky Blinders", "Vikingos", "The Crown",
+          "Friends", "The Office", "How I Met Your Mother", "The Big Bang Theory", "Modern Family",
+          "Brooklyn Nine-Nine", "Malcolm el de en Medio", "Gilmore Girls", "Grey's Anatomy", "Dr. House",
+          "Lost", "Prison Break", "La Casa de Papel", "Élite", "El Juego del Calamar",
+          "Narcos", "Sherlock", "Fleabag", "The Bear", "Ted Lasso",
+          "Yellowstone", "Cobra Kai", "Euphoria", "The White Lotus", "Severance", "Arcane"
+        ]
+      },
+      "🍔 Comidas & Platillos del Mundo": {
+        icon: "🍕",
+        words: [
+          "Pizza estilo New York (Estados Unidos)", "Hamburguesa con queso (Estados Unidos)", "Hot Dog (Estados Unidos)",
+          "BBQ Ribs (Estados Unidos)", "Mac and Cheese (Estados Unidos)", "Tacos (México)", "Burritos (México)",
+          "Enchiladas (México)", "Pozole (México)", "Guacamole con totopos (México)", "Tamales (México)",
+          "Pupusas (El Salvador)", "Ceviche (Perú)", "Lomo Saltado (Perú)", "Arepas (Colombia / Venezuela)",
+          "Bandeja Paisa (Colombia)", "Empanadas (Argentina)", "Asado / Bife de chorizo (Argentina)", "Choripán (Argentina)",
+          "Feijoada (Brasil)", "Pão de Queijo (Brasil)", "Poutine (Canadá)", "Jerk Chicken (Jamaica)",
+          "Curry de cabra (Caribe)", "Sancocho (República Dominicana)", "Pizza Napolitana (Italia)",
+          "Espagueti a la Carbonara (Italia)", "Lasaña (Italia)", "Risotto (Italia)", "Paella (España)",
+          "Tortilla de patatas (España)", "Jamón Ibérico (España)", "Tapas / Croquetas (España)", "Croissant (Francia)",
+          "Baguette con queso brie (Francia)", "Ratatouille (Francia)", "Boeuf Bourguignon (Francia)",
+          "Fish and Chips (Reino Unido)", "Shepherd's Pie (Reino Unido)", "Bratwurst / Currywurst (Alemania)",
+          "Pretzel (Alemania)", "Wiener Schnitzel (Austria)", "Goulash (Hungría)", "Pierogi (Polonia)",
+          "Borsch (Ucrania)", "Moussaka (Grecia)", "Souvlaki / Gyros (Grecia)", "Fondue de queso (Suiza)",
+          "Pastel de Nata (Portugal)", "Köttbullar (Albóndigas de Suecia)", "Sushi (Japón)", "Ramen (Japón)",
+          "Tempura (Japón)", "Takoyaki (Japón)", "Yakitori (Japón)", "Dumplings / Gyozas (China)",
+          "Pato Pekín (China)", "Pollo Kung Pao (China)", "Chow Mein (China)", "Dim Sum (China)",
+          "Kimchi (Corea del Sur)", "Bibimbap (Corea del Sur)", "Bulgogi (Corea del Sur)", "Tteokbokki (Corea del Sur)",
+          "Pollo frito coreano (Corea del Sur)", "Pad Thai (Tailandia)", "Tom Yum Goong (Tailandia)",
+          "Curry Verde (Tailandia)", "Pho (Vietnam)", "Bánh Mì (Vietnam)", "Nasi Goreng (Indonesia)",
+          "Satay (Indonesia)", "Rendang (Indonesia)", "Chicken Tikka Masala (India)", "Butter Chicken (India)",
+          "Biryani (India)", "Samosas (India)", "Naan con curry (India)", "Hainanese Chicken Rice (Singapur)",
+          "Adobo filipino (Filipinas)", "Shawarma (Medio Oriente)", "Falafel (Medio Oriente)", "Hummus (Medio Oriente)",
+          "Kebab / Döner (Turquía)", "Baklava (Turquía)", "Shakshuka (Medio Oriente)", "Tabbouleh (Líbano)",
+          "Cuscús (Marruecos)", "Tagine (Marruecos)", "Pide (Turquía)", "Jollof Rice (África)",
+          "Injera con Doro Wat (Etiopía)", "Bobotie (Sudáfrica)", "Bunny Chow (Sudáfrica)", "Suya (Nigeria)",
+          "Meat Pie australiano (Australia)", "Pavlova (Australia / Nueva Zelanda)", "Barramundi asado (Australia)",
+          "Hāngi (Nueva Zelanda)", "Fish and Chips oceánico (Nueva Zelanda)"
+        ]
+      },
+      "🌍 Países del Mundo": {
+        icon: "🌐",
+        words: [
+          "México", "Argentina", "Brasil", "Colombia", "Chile", "Perú", "Canadá", "Estados Unidos",
+          "Uruguay", "Ecuador", "Bolivia", "Paraguay", "Venezuela", "Costa Rica", "Panamá", "Guatemala",
+          "Honduras", "El Salvador", "Nicaragua", "Cuba", "República Dominicana", "Jamaica", "Haití",
+          "España", "Francia", "Italia", "Alemania", "Reino Unido", "Portugal", "Irlanda", "Bélgica",
+          "Países Bajos", "Suiza", "Austria", "Grecia", "Suecia", "Noruega", "Dinamarca", "Finlandia",
+          "Polonia", "República Checa", "Hungría", "Rumania", "Croacia", "Serbia", "Ucrania", "Rusia",
+          "Turquía", "Japón", "China", "Corea del Sur", "Corea del Norte", "India", "Tailandia",
+          "Vietnam", "Filipinas", "Indonesia", "Malasia", "Singapur", "Arabia Saudita", "Emiratos Árabes Unidos",
+          "Qatar", "Israel", "Líbano", "Jordania", "Irak", "Irán", "Pakistán", "Bangladés", "Nepal",
+          "Egipto", "Marruecos", "Sudáfrica", "Nigeria", "Kenia", "Etiopía", "Ghana", "Senegal",
+          "Costa de Marfil", "Túnez", "Argelia", "Madagascar", "Tanzania", "Uganda", "Camerún", "Zimbabue",
+          "Australia", "Nueva Zelanda", "Fiyi", "Samoa", "Papúa Nueva Guinea", "Mónaco", "Islandia",
+          "Luxemburgo", "Malta", "Chipre", "Mongolia", "Kazajistán", "Georgia", "Armenia",
+          "Bulgaria", "Eslovaquia", "Eslovenia", "Estonia", "Letonia", "Lituania"
+        ]
+      },
+      "🇲🇽 Mexicanadas & Cultura Mexicana": {
+        icon: "🌶️",
+        words: [
+          "El Chavo del 8", "Tacos al Pastor", "Lucha Libre", "El Santo Enmascarado", "La Llorona",
+          "Quinceañera", "Vicente Fernández", "Día de Muertos", "El Chupacabras", "Piñata",
+          "Mariachis", "Molcajete de piedra", "Trajinera en Xochimilco", "Cantinflas", "Frida Kahlo",
+          "Cantar Cielito Lindo", "Tequila con limón y sal", "Tortas ahogadas de Jalisco", "Trompo de pastor",
+          "Chapulines con sal y limón", "Pan de muerto", "Bailar La Chona", "Esquites con tuétano",
+          "El Chapulín Colorado", "Barrio de Tepito", "Elote con chile del que pica", "Michelada bien fría",
+          "Dar el Grito de Independencia", "Taquería de la esquina", "Bailar el Payaso de Rodeo",
+          "El Santo contra las Momias", "Tamales oaxaqueños", "Tlacoyos de frijol", "Chiles en nogada",
+          "Mole poblano", "Mercado de Sonora", "Lotería mexicana", "La Catrina", "Blue Demon",
+          "Pirámides de Teotihuacán", "Basílica de Guadalupe", "Cempasúchil en noviembre", "Pueblo Mágico",
+          "Banda sinaloense", "Mezcal con sal de gusano", "Tacos de suadero", "Agua fresca de horchata",
+          "Agua fresca de jamaica", "Pambazo de papa con chorizo", "Tostadas de pata", "Chicharrón preparado",
+          "Gansito congelado", "Mazapán de la Rosa", "Pelón Pelo Rico", "Paleta Vero Mango",
+          "Cajeta de Celaya", "Charanda", "Pulque curado", "Tepache fermentado", "Torta de tamal (Guajolota)",
+          "Bolillo calientito", "Hacer coperacha pal pomo", "Decir Ahorita voy", "El tianguis del domingo",
+          "Afilador con su silbato", "Microbús a toda velocidad", "Metro Pantitlán en hora pico", "El zócalo de la CDMX",
+          "Ángel de la Independencia", "Castillo de Chapultepec", "Cenotes de Yucatán", "Cancún",
+          "Volador de Papantla", "Jarabe Tapatío", "Sombrero de charro", "Guitarra de Paracho", "Alebrije multicolor",
+          "Quesillo oaxaqueño", "Carnitas estilo Michoacán", "Aguachile verde de camarón", "Cochinita pibil"
+        ]
+      },
+      "🎤 Canciones & Artistas Legendarios": {
+        icon: "🎶",
+        words: [
+          "Luis Miguel", "Bad Bunny", "Shakira", "Michael Jackson", "Queen",
+          "Rosalía", "Daddy Yankee", "Taylor Swift", "Beyoncé", "Billie Eilish",
+          "Peso Pluma", "RBD", "Karol G", "Juan Gabriel", "Selena Quintanilla",
+          "Eminem", "Madonna", "Los Ángeles Azules", "Chayanne bailando", "Enrique Iglesias",
+          "Dua Lipa", "Justin Bieber", "Bruno Mars", "Pitbull gritando", "Rauw Alejandro",
+          "La Macarena", "Payaso de Rodeo", "La Incondicional", "The Beatles", "Elvis Presley",
+          "Kurt Cobain y Nirvana", "Bob Marley", "Guns N' Roses", "Coldplay", "Adele",
+          "Rihanna", "Katy Perry", "Lady Gaga", "David Bowie", "Elton John",
+          "Céline Dion", "Whitney Houston", "Britney Spears", "Avril Lavigne", "Linkin Park",
+          "Green Day", "Blink-182", "Red Hot Chili Peppers", "Metallica", "AC/DC",
+          "Gorillaz", "Daft Punk", "Avicii", "David Guetta", "Tiësto",
+          "J Balvin", "Maluma", "Ozuna", "Anuel AA", "Camilo",
+          "Carlos Vives", "Marc Anthony", "Ricky Martin", "Gloria Trevi", "Paulina Rubio",
+          "Thalía", "Alejandra Guzmán", "Café Tacvba", "Molotov", "Zoé",
+          "Enanitos Verdes", "Soda Stereo", "Héroes del Silencio", "Hombres G", "Maná",
+          "Panteón Rococó", "Julieta Venegas", "Natalia Lafourcade", "Mon Laferte", "Calle 13",
+          "José José", "Rocío Dúrcal", "Marco Antonio Solís", "Los Bukis", "Los Tigres del Norte",
+          "Bronco", "Intocable", "Grupo Frontera", "Christian Nodal", "Carin León", "Banda MS", "Moderatto", "PXNDX", "Allison"
+        ]
+      },
+      "⚡ Ficción & Superhéroes": {
+        icon: "🦸",
+        words: [
+          "Iron Man volando con propulsores", "Goku haciendo la Genkidama", "Pikachu lanzando un impactrueno",
+          "Homero Simpson en el sillón", "Elsa cantando Libre Soy", "Mickey Mouse con guantes blancos",
+          "El Joker riéndose a carcajadas", "Spider-Man lanzando telarañas", "Darth Vader respirando con máscara",
+          "Yoda hablando con palabras al revés", "Shrek en su pantano", "Bob Esponja haciendo cangreburgers",
+          "Harry Potter con su varita mágica", "Super Mario comiendo un hongo rojo", "Wolverine sacando sus garras",
+          "Thanos chasqueando los dedos", "Batman vigilando en una gárgola", "Naruto corriendo con brazos atrás",
+          "Capitán América lanzando su escudo", "Thor levantando su martillo con rayos", "Hulk aplastando todo a su paso",
+          "Doctor Strange abriendo portales", "Deadpool hablando a la cámara", "Superman con rayos láser en los ojos",
+          "Mujer Maravilla con el lazo dorado", "Flash corriendo a la velocidad de la luz", "Sonic el Erizo rodando velozmente",
+          "Kratos desenvainando espadas con cadenas", "Master Chief con su rifle de asalto", "Lara Croft explorando tumbas",
+          "Donkey Kong aventando barriles", "Mega Man con cañón de plasma", "Sub-Zero congelando rivales"
+        ]
       }
     };
 
-    // Motor de sonido sintetizado (Web Audio API)
     let audioCtx = null;
     function initAudio() {
       if (!audioCtx) {
@@ -665,9 +590,7 @@
         gain.connect(audioCtx.destination);
         osc.start();
         osc.stop(audioCtx.currentTime + duration);
-      } catch (e) {
-        console.warn("Audio error:", e);
-      }
+      } catch (e) {}
     }
 
     function soundCorrect() {
@@ -690,7 +613,7 @@
       if (navigator.vibrate) navigator.vibrate([150, 80, 250]);
     }
 
-    let selectedCategoryKey = "🥀 José Madero";
+    let selectedCategoryKey = "💼 Profesiones & Oficios";
     let roundDuration = 60;
     let roundTimer = null;
     let timeLeft = 60;
@@ -703,7 +626,6 @@
     let motionListenerActive = false;
     let tiltNeutral = true;
 
-    // DOM Elements
     const screenHome = document.getElementById('screen-home');
     const screenCountdown = document.getElementById('screen-countdown');
     const screenGame = document.getElementById('screen-game');
@@ -751,14 +673,14 @@
         const cat = GAME_DATA[catName];
         const isSelected = catName === selectedCategoryKey;
         const card = document.createElement('button');
-        card.className = `p-2.5 rounded-2xl border text-left transition-all flex items-center justify-between gap-2 ${
+        card.className = `p-3 rounded-2xl border text-left transition-all flex items-center justify-between gap-3 ${
           isSelected 
-            ? 'bg-slate-800/90 border-indigo-400 ring-2 ring-indigo-500/50 shadow-md' 
-            : 'bg-slate-900/60 border-slate-800 hover:bg-slate-800/60'
+            ? 'bg-slate-800/90 border-indigo-400 ring-2 ring-indigo-500/50 shadow-lg' 
+            : 'bg-slate-900/70 border-slate-800 hover:bg-slate-800/60'
         }`;
         card.innerHTML = `
-          <div class="flex items-center gap-2.5 truncate">
-            <span class="text-xl md:text-2xl">${cat.icon}</span>
+          <div class="flex items-center gap-3 truncate">
+            <span class="text-2xl">${cat.icon}</span>
             <div class="truncate">
               <div class="font-bold text-xs md:text-sm text-slate-100 truncate">${catName}</div>
               <div class="text-[11px] text-emerald-400 font-semibold">${cat.words.length} palabras</div>
@@ -785,9 +707,9 @@
     timeButtons.forEach(btn => {
       btn.onclick = () => {
         timeButtons.forEach(b => {
-          b.className = 'time-btn px-3 py-1 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700';
+          b.className = 'time-btn px-4 py-1.5 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300 hover:bg-slate-700';
         });
-        btn.className = 'time-btn px-3 py-1 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white shadow-md';
+        btn.className = 'time-btn px-4 py-1.5 rounded-xl text-xs font-bold transition-all bg-indigo-600 text-white shadow-md';
         roundDuration = parseInt(btn.dataset.time, 10);
       };
     });
@@ -798,7 +720,6 @@
           const permission = await DeviceOrientationEvent.requestPermission();
           return permission === 'granted';
         } catch (e) {
-          console.warn("Permiso de orientación:", e);
           return false;
         }
       }
@@ -1014,14 +935,14 @@
       roundHistory.forEach(item => {
         const isCorrect = item.result === 'correct';
         const row = document.createElement('div');
-        row.className = `flex items-center justify-between p-2 rounded-xl border ${
+        row.className = `flex items-center justify-between p-2.5 rounded-xl border ${
           isCorrect 
             ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-200' 
             : 'bg-amber-950/40 border-amber-500/30 text-amber-200'
         }`;
         row.innerHTML = `
           <span class="font-semibold text-xs md:text-sm truncate pr-2">${item.word}</span>
-          <span class="text-[11px] font-bold px-2 py-0.5 rounded-full ${
+          <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
             isCorrect ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'
           }">
             ${isCorrect ? 'Acierto +1' : 'Paso'}
@@ -1031,7 +952,6 @@
       });
     }
 
-    // Botones y atajos
     btnStart.onclick = startGameFlow;
     btnReplay.onclick = startGameFlow;
     
